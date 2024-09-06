@@ -1,0 +1,25 @@
+{
+    "name": "lichi/report_collector",
+    "type": "library",
+    "description": "Report collector for excel",
+    "keywords": ["Lichi","lichi"],
+    "homepage": "https://github.com/IvanHunters/report_collector",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ivan Okhotnikov",
+            "email": "ohotnikovivan@yandex.ru",
+            "homepage": "https://vk.com/id145567397",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Lichi\\Report\\": "src/"
+        }
+    },
+    "require": {
+        "phpoffice/phpspreadsheet": "^1.23",
+        "mk-j/php_xlsxwriter": "^0.38.0"
+    }
+}

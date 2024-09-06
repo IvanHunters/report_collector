@@ -1,0 +1,56 @@
+FROM php:8.0.2-fpm
+
+COPY . /var/www
+
+# Set working directory
+WORKDIR /var/www
+
+# Install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    htop \
+    wget \
+    lynx \
+    curl \
+    mc \
+    vim \
+    libmcrypt-dev \
+    libicu-dev \
+    libfreetype6-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libxml2-dev \
+    unzip \
+    libzip-dev \
+    locales \
+    tzdata \
+    nano
+
+RUN docker-php-ext-install mysqli \
+        && docker-php-ext-install pdo_mysql
+
+RUN docker-php-ext-install gd \
+        && docker-php-ext-configure gd \
+        &&  docker-php-ext-enable gd
+
+RUN docker-php-ext-install zip \
+        && docker-php-ext-configure zip \
+        &&  docker-php-ext-enable zip
+
+RUN pecl install -o -f redis \
+        &&  rm -rf /tmp/pear \
+        &&  docker-php-ext-enable redis
+
+# xdebug
+RUN pecl install -o -f xdebug \
+    && cp .ops/conf/php/develop.ini /usr/local/etc/php/conf.d/custom.ini
+
+# install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# add test debian repository
+
+# create dir "files" for symlink
+RUN mkdir /var/files && \
+    chown 1000:1000 /var/files
+
+#
+RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
