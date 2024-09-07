@@ -32,6 +32,17 @@ class Pipeline
         return $this->data;
     }
 
+
+    /**
+     * @return array
+     */
+    public function set(array $newData): array
+    {
+        return $this->data = $newData;
+    }
+
+
+
     /**
      * @return array
      */
