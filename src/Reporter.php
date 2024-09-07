@@ -30,10 +30,10 @@ class Reporter
             $error = $pipeline->getErrors();
             if (($this->onlyErrors && !empty($error)) || !($this->onlyErrors)) {
                 foreach ($headers as $name => $header) {
-                    if ($name === $numerationColumnName) {
+                    if (trim($name) === $numerationColumnName) {
                         continue;
                     }
-                    if (isset($data[$name]) && $name !== $errorColumnName) {
+                    if (isset($data[$name]) && trim($name) !== $errorColumnName) {
                         $rowDates[$index][] = $data[$name];
                     } elseif ($name === $errorColumnName) {
                         $rowDates[$index][] = implode("    |    ", $error);
