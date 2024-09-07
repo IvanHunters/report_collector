@@ -1,31 +1,21 @@
 <?php
 
 
-use Lichi\Report\Collector;
-use Lichi\Report\PipelineData;
+use Lichi\Report\Extractor\ExcelExtractor;
 use Lichi\Report\Reporter;
+use Lichi\Report\test\TestValidator;
 
 require "vendor/autoload.php";
 
-$collector = new Collector();
-$items = [
-    ['name' => 'test'],
-    ['name' => 'test2'],
-    ['name' => 'test3', 'pos' => '123'],
-    ['name' => 'test4', 'tos' => 'asd'],
-];
+$collector = ExcelExtractor::extract("tmp/test.xlsx");
+$count = $collector->count();
+$header = $collector->header();
+$data = $collector->get([]);
 
-foreach ($items as $index => $item) {
-    $pipeline = new PipelineData($item);
-    if ($index % 2 === 0) {
-        $pipeline->addError('Bad roll');
-        $pipeline->addError('Bad error');
-    } else {
-        $pipeline->addError('Bad lose');
-    }
-    $collector->add($pipeline);
+$validator = new TestValidator();
+
+$collector->validate($validator);
+if ($collector->hasErrors()) {
+    $reporter = new Reporter($collector, false);
+    $reporter->createReport('tmp/test_new.xlsx');
 }
-
-$reporter = new Reporter($collector);
-
-$reporter->createReport('test.xlsx');

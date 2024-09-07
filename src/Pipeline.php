@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Lichi\Report;
 
-class PipelineData
+class Pipeline
 {
     private array $data;
     private array $errors = [];

@@ -9,14 +9,16 @@ use Lichi\Report\Render\ExcelRender;
 class Reporter
 {
     private Collector $collector;
+    private bool $onlyErrors;
 
-    public function __construct(Collector $collector)
+    public function __construct(Collector $collector, bool $onlyErrors = false)
     {
         $this->collector = $collector;
+        $this->onlyErrors = $onlyErrors;
     }
     public function createReport(string $filename, string $numerationColumnName = "№", string $errorColumnName = "Errors"): void
     {
-        $pipelines = $this->collector->data();
+        $pipelines = $this->collector->pipelines();
         $headers = $this->collector->header($numerationColumnName, $errorColumnName);
         $mainHeaderStyles = ['font'=>'Times New Roman','font-size'=>12,'border'=>'left,right,top,bottom', 'halign'=> 'left', 'valign'=> 'center', 'border-style'=>'thin'];
         $bodyStyles = $mainHeaderStyles + ['height'=>17];
@@ -26,16 +28,18 @@ class Reporter
         foreach ($pipelines as $index => $pipeline) {
             $data = $pipeline->getData();
             $error = $pipeline->getErrors();
-            foreach ($headers as $name => $header) {
-                if ($name === $numerationColumnName) {
-                    continue;
-                }
-                if (isset($data[$name])) {
-                    $rowDates[$index][] = $data[$name];
-                } elseif($name === $errorColumnName){
-                    $rowDates[$index][] = implode("    |    ", $error);
-                } else {
-                    $rowDates[$index][] = '';
+            if (($this->onlyErrors && !empty($error)) || !($this->onlyErrors)) {
+                foreach ($headers as $name => $header) {
+                    if ($name === $numerationColumnName) {
+                        continue;
+                    }
+                    if (isset($data[$name]) && $name !== $errorColumnName) {
+                        $rowDates[$index][] = $data[$name];
+                    } elseif ($name === $errorColumnName) {
+                        $rowDates[$index][] = implode("    |    ", $error);
+                    } else {
+                        $rowDates[$index][] = '';
+                    }
                 }
             }
         }
