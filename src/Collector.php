@@ -73,7 +73,7 @@ class Collector
         return !empty($this->pipelines['errors']);
     }
 
-    public function get(array $arrayMap = []): array
+    public function get(array $arrayMap = [], $additionalData = []): array
     {
         $data = [];
         $pipelines = $this->pipelines['data'];
@@ -90,6 +90,7 @@ class Collector
                     }
                 }
             }
+            $items = array_merge($items, $additionalData);
             $data[] = $items;
         }
         return $data;
