@@ -50,7 +50,7 @@ class Reporter
             } elseif($headerName === $errorColumnName) {
                 $widths[] = 500;
             } else {
-                $widths[] = 5 * mb_strlen($headerName);
+                $widths[] = 2.5 * mb_strlen($headerName);
             }
         }
 
