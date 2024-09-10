@@ -11,7 +11,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 class ExcelExtractor
 {
 
-    public static function extract(string $filename): Collector
+    public static function extract(string $filename, array $ignoringRows = []): Collector
     {
         $headers = [];;
         $collector = new Collector();
@@ -22,7 +22,17 @@ class ExcelExtractor
         $spreadsheet = $reader->load($filePath);
 
         $preData = $spreadsheet->getActiveSheet()->toArray();
-        $preHeaders = $preData[0];
+        $clearedData = [];
+        if (!empty($ignoringRows)) {
+            foreach ($preData as $index => $data) {
+                if (!in_array($index, $ignoringRows)) {
+                    $clearedData[] = $data;
+                }
+            }
+        } else {
+            $clearedData = $preData;
+        }
+        $preHeaders = $clearedData[0];
         foreach ($preHeaders as $preHeader) {
             if (!is_null($preHeader)) {
                 $headers[] = $preHeader;
