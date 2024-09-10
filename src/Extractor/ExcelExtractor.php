@@ -31,6 +31,9 @@ class ExcelExtractor
         unset($preData[0]);
         foreach ($preData as $items) {
             $item = [];
+            if (empty(array_sum($items))) {
+                continue;
+            }
             foreach ($headers as $index => $header) {
                 $item[$header] = $items[$index];
             }
