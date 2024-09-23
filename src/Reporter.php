@@ -22,7 +22,7 @@ class Reporter
         $headers = $this->collector->header($numerationColumnName, $errorColumnName);
         $mainHeaderStyles = ['font'=>'Times New Roman','font-size'=>12,'border'=>'left,right,top,bottom', 'halign'=> 'left', 'valign'=> 'center', 'border-style'=>'thin'];
         $bodyStyles = $mainHeaderStyles + ['height'=>17];
-        $tagStyles = array('wrap_text'=>true, 'height'=>25, 'font'=>'Times New Roman', 'valign'=> 'center', 'font-style'=>'bold','font-size'=>12,'border'=>'none', 'halign'=> 'center');
+        $tagStyles = ['wrap_text'=>true, 'height'=>25, 'font'=>'Times New Roman', 'valign'=> 'center', 'font-style'=>'bold','font-size'=>12,'border'=>'none', 'halign'=> 'center'];
 
         $rowDates = [];
         foreach ($pipelines as $index => $pipeline) {
@@ -58,6 +58,6 @@ class Reporter
 
         $render = new ExcelRender($headers, $headerStyles, $numerationColumnName);
         $render->addBlock('Sheet1', null, $rowDates, $bodyStyles, $tagStyles);
-        $render->save($filename);
+        $render->save($filename, $this->collector->getHiddenRaws(), $this->collector->getHiddenSheets());
     }
 }

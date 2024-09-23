@@ -10,6 +10,8 @@ class Collector
         'data' => [],
         'errors' => [],
     ];
+    private array $hiddenData;
+
     public function add(Pipeline $pipeline): void
     {
         $this->pipelines['data'][] = $pipeline;
@@ -95,4 +97,20 @@ class Collector
         }
         return $data;
     }
+
+    public function setHiddenData(array $hiddenData): void
+    {
+        $this->hiddenData = $hiddenData;
+    }
+
+    public function getHiddenRaws(): array
+    {
+        return $this->hiddenData['raws'] ?? [];
+    }
+
+    public function getHiddenSheets(): array
+    {
+        return $this->hiddenData['sheets'] ?? [];
+    }
+
 }

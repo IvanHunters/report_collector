@@ -7,7 +7,7 @@ use Lichi\Report\test\TestValidator;
 
 require "vendor/autoload.php";
 
-$collector = ExcelExtractor::extract("tmp/test.xlsx");
+$collector = (new ExcelExtractor)->extract("tmp/test.xlsx", [0,2]);
 $count = $collector->count();
 $header = $collector->header();
 $data = $collector->get([]);

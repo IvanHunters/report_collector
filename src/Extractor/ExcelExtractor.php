@@ -13,7 +13,8 @@ class ExcelExtractor
 
     public static function extract(string $filename, array $ignoringRows = []): Collector
     {
-        $headers = [];;
+        $headers = [];
+        $hiddenData = [];
         $collector = new Collector();
 
         $reader = new Xlsx();
@@ -21,12 +22,23 @@ class ExcelExtractor
         $filePath = $filename;
         $spreadsheet = $reader->load($filePath);
 
-        $preData = $spreadsheet->getActiveSheet()->toArray();
+        $activeSheet = $spreadsheet->getActiveSheet();
+        $preData = $activeSheet->toArray();
+        $activeSheetName = $activeSheet->getTitle();
+        $otherSheets = $spreadsheet->getAllSheets();
+        foreach ($otherSheets as $otherSheet) {
+            $sheetTitle = $otherSheet->getTitle();
+            if ($sheetTitle !== $activeSheetName) {
+                $hiddenData['sheets'][$sheetTitle] = $otherSheet;
+            }
+        }
         $clearedData = [];
         if (!empty($ignoringRows)) {
             foreach ($preData as $index => $data) {
                 if (!in_array($index, $ignoringRows)) {
                     $clearedData[] = $data;
+                } else {
+                    $hiddenData['raws'][$index] = $data;
                 }
             }
         } else {
@@ -50,7 +62,7 @@ class ExcelExtractor
             $pipeline = new Pipeline($item);
             $collector->add($pipeline);
         }
+        $collector->setHiddenData($hiddenData);
         return $collector;
     }
-
 }
