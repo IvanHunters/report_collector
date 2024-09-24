@@ -73,7 +73,7 @@ class ExcelRender
             }
         }
         foreach ($hiddenSheets as $sheetName => $sheet) {
-            $writer->writeSheet($sheet->toArray(), $sheetName);
+            $writer->writeSheet($sheet, $sheetName);
         }
 
 

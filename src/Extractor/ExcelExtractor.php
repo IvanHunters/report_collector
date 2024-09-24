@@ -29,7 +29,7 @@ class ExcelExtractor
         foreach ($otherSheets as $otherSheet) {
             $sheetTitle = $otherSheet->getTitle();
             if ($sheetTitle !== $activeSheetName) {
-                $hiddenData['sheets'][$sheetTitle] = $otherSheet;
+                $hiddenData['sheets'][$sheetTitle] = $otherSheet->toArray();
             }
         }
         $clearedData = [];
