@@ -37,10 +37,16 @@ class ExcelRender
         foreach ($sheetData as $sheetName => $blocks)
         {
             $rows = $blockRows = $realRows = 1;
-            if (isset($hiddenRows[0])) {
-                $hiddenRow = $hiddenRows[0];
-                $realRows = 2;
-                $writer->writeSheetRow($sheetName, $hiddenRow, ['wrap_text'=>true, 'height'=>25, 'font'=>'Times New Roman', 'valign'=> 'center', 'font-style'=>'bold','font-size'=>12,'border'=>'none', 'halign'=> 'center']);
+            $falseIndex = 0;
+            foreach ($hiddenRows as $hiddenIndex => $hiddenRowData) {
+                if ($falseIndex === $hiddenIndex) {
+                    $hiddenRow = $hiddenRowData;
+                    $writer->writeSheetRow($sheetName, $hiddenRow, ['wrap_text' => true, 'height' => 25, 'font' => 'Times New Roman', 'valign' => 'center', 'font-style' => 'bold', 'font-size' => 12, 'border' => 'none', 'halign' => 'center']);
+                    $falseIndex++;
+                    $realRows++;
+                } else {
+                    break;
+                }
             }
             $writer->writeSheetRow($sheetName, array_keys($this->header), $this->headerStyles);
             foreach ($blocks as $blockName => $blockItems)
